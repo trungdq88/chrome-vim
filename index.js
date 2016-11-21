@@ -14,6 +14,9 @@ const COMMANDS = {
   'G': () => {
     window.scrollTo(0, Number.MAX_SAFE_INTEGER)
   },
+  'C-\\\\w': () => {
+    [].forEach.call(document.querySelectorAll('a'), e => e.style.background = 'yellow')
+  },
 }
 
 const keyStack = [];
@@ -47,7 +50,7 @@ function match(notation) {
     n => n.startsWith(notation)
   );
 
-  log(find);
+  log('find:', find);
 
   switch (find.length) {
     case 0: return 'not_found';
@@ -62,15 +65,15 @@ function match(notation) {
 }
 
 window.addEventListener('keydown', e => {
-  log(e);
+  log('keydown:', e);
   const metaKey = e.ctrlKey ? 'C-' : '';
   const key = e.key;
   keyStack.push(key);
 
   const notation = composeNotation(metaKey, keyStack.join(''));
   const check = match(notation);
-  log(notation);
-  log(check);
+  log('notation:',  notation);
+  log('check:', check);
   if (check === 'found_multiple_commands' || check === 'found_but_not_complete') {
     // wait for further keys
     showIncompleteCommand(notation);
